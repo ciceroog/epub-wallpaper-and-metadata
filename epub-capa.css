@@ -75,6 +75,7 @@
 }
 .meta-fields.is-disabled { opacity: .55; }
 .meta-field { display: flex; flex-direction: column; gap: 4px; }
+.meta-field-row { display: flex; gap: 10px; }
 .meta-field .field-label { margin: 0; }
 .meta-field input:disabled, .meta-field select:disabled { cursor: not-allowed; }
 

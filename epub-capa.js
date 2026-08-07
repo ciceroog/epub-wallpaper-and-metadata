@@ -194,6 +194,7 @@ const el = {
   metaCard: $('#meta-card'), metaEdit: $('#meta-edit'), metaFields: $('#meta-fields'),
   metaIsbn: $('#meta-isbn'), metaCreator: $('#meta-creator'), metaPublisher: $('#meta-publisher'),
   metaDate: $('#meta-date'), metaLanguage: $('#meta-language'),
+  metaSeries: $('#meta-series'), metaSeriesIndex: $('#meta-series-index'),
 
   exportCard: $('#export-card'), saveEpub: $('#save-epub'), saveHint: $('#save-epub-hint'),
   epubProgress: $('#epub-progress'), epubFill: $('#epub-fill'),
@@ -389,6 +390,8 @@ function fillMetadataFields() {
   el.metaPublisher.value = p.publisher || '';
   el.metaDate.value = p.date || '';
   el.metaLanguage.value = matchLanguage(p.language);
+  el.metaSeries.value = p.series || '';
+  el.metaSeriesIndex.value = p.seriesIndex || '';
 }
 
 /* -- Eventos de upload do EPUB ------------------------------------------------ */
@@ -534,7 +537,7 @@ function updateFormatUI() {
 
 /* -- Metadados: checkbox mestre habilita/desabilita os campos ----------------- */
 function setMetaEnabled(on) {
-  [el.metaIsbn, el.metaCreator, el.metaPublisher, el.metaDate, el.metaLanguage]
+  [el.metaIsbn, el.metaCreator, el.metaPublisher, el.metaDate, el.metaLanguage, el.metaSeries, el.metaSeriesIndex]
     .forEach(f => f.disabled = !on);
   el.metaFields.classList.toggle('is-disabled', !on);
 }
@@ -569,6 +572,8 @@ el.saveEpub.addEventListener('click', async () => {
         publisher: el.metaPublisher.value.trim(),
         date: el.metaDate.value.trim(),
         language: el.metaLanguage.value,
+        series: el.metaSeries.value.trim(),
+        seriesIndex: el.metaSeriesIndex.value.trim(),
       });
     }
     el.epubFill.style.width = '40%';

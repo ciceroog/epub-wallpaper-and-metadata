@@ -95,6 +95,30 @@ function readOpf(opfDoc, opfPath) {
   let isbn = '';
   if (isbnEl) isbn = firstText(isbnEl).replace(/^urn:isbn:/i, '').replace(/^isbn[:\s]*/i, '').trim();
 
+  // --- série: calibre:series (EPUB2, mais universal) primeiro; se não achar,
+  // tenta o padrão "oficial" do EPUB3 (belongs-to-collection) ---
+  const metas = [...metadata.getElementsByTagName('meta')];
+  let series = '', seriesIndex = '';
+  const calSeries = metas.find(m => (m.getAttribute('name') || '').toLowerCase() === 'calibre:series');
+  const calIndex = metas.find(m => (m.getAttribute('name') || '').toLowerCase() === 'calibre:series_index');
+  if (calSeries) series = calSeries.getAttribute('content') || '';
+  if (calIndex) seriesIndex = calIndex.getAttribute('content') || '';
+  if (!series) {
+    const collMeta = metas.find(m => m.getAttribute('property') === 'belongs-to-collection');
+    if (collMeta) {
+      const id = collMeta.getAttribute('id');
+      const typeMeta = id && metas.find(m => m.getAttribute('refines') === '#' + id && m.getAttribute('property') === 'collection-type');
+      const isSeries = !typeMeta || firstText(typeMeta).toLowerCase() === 'series';
+      if (isSeries) {
+        series = firstText(collMeta);
+        if (!seriesIndex) {
+          const posMeta = id && metas.find(m => m.getAttribute('refines') === '#' + id && m.getAttribute('property') === 'group-position');
+          if (posMeta) seriesIndex = firstText(posMeta);
+        }
+      }
+    }
+  }
+
   return {
     isEpub3: pkg.getAttribute('version') === '3.0' || pkg.getAttribute('version') === '3.0.1',
     cover,
@@ -104,6 +128,7 @@ function readOpf(opfDoc, opfPath) {
     language: firstText(languageEl),
     date: firstText(dateEl),
     isbn,
+    series, seriesIndex,
     manifest, metadata,   // devolvidos para a gravação reaproveitar os nós
   };
 }
@@ -156,6 +181,69 @@ function writeMetadata(opfDoc, parsed, changes) {
   if (changes.publisher) setDcValue(opfDoc, metadata, 'publisher', changes.publisher);
   if (changes.date)      setDcValue(opfDoc, metadata, 'date', changes.date);
   if (changes.language)  setDcValue(opfDoc, metadata, 'language', changes.language);
+  if (changes.series)    writeSeries(opfDoc, metadata, changes.series, changes.seriesIndex);
+}
+
+// Grava a série nos dois padrões em uso: calibre:series / calibre:series_index
+// (EPUB2, o mais universalmente reconhecido, inclusive pelo próprio Calibre) e
+// belongs-to-collection (o padrão "oficial" do EPUB3) — igual foi feito com a
+// capa, declarando dos dois jeitos pra máxima compatibilidade entre leitores.
+function writeSeries(opfDoc, metadata, series, seriesIndex) {
+  const metasNow = () => [...metadata.getElementsByTagName('meta')];
+
+  // --- calibre:series / calibre:series_index ---
+  let calSeries = metasNow().find(m => (m.getAttribute('name') || '').toLowerCase() === 'calibre:series');
+  if (!calSeries) {
+    calSeries = opfDoc.createElementNS(NS.opf, 'meta');
+    calSeries.setAttribute('name', 'calibre:series');
+    metadata.appendChild(calSeries);
+  }
+  calSeries.setAttribute('content', series);
+
+  if (seriesIndex) {
+    let calIndex = metasNow().find(m => (m.getAttribute('name') || '').toLowerCase() === 'calibre:series_index');
+    if (!calIndex) {
+      calIndex = opfDoc.createElementNS(NS.opf, 'meta');
+      calIndex.setAttribute('name', 'calibre:series_index');
+      metadata.appendChild(calIndex);
+    }
+    calIndex.setAttribute('content', seriesIndex);
+  }
+
+  // --- belongs-to-collection (EPUB3) ---
+  let collMeta = metasNow().find(m => m.getAttribute('property') === 'belongs-to-collection');
+  let collId;
+  if (!collMeta) {
+    collMeta = opfDoc.createElementNS(NS.opf, 'meta');
+    collId = 'series-title';
+    collMeta.setAttribute('id', collId);
+    collMeta.setAttribute('property', 'belongs-to-collection');
+    metadata.appendChild(collMeta);
+  } else {
+    collId = collMeta.getAttribute('id');
+    if (!collId) { collId = 'series-title'; collMeta.setAttribute('id', collId); }
+  }
+  collMeta.textContent = series;
+
+  let typeMeta = metasNow().find(m => m.getAttribute('refines') === '#' + collId && m.getAttribute('property') === 'collection-type');
+  if (!typeMeta) {
+    typeMeta = opfDoc.createElementNS(NS.opf, 'meta');
+    typeMeta.setAttribute('refines', '#' + collId);
+    typeMeta.setAttribute('property', 'collection-type');
+    metadata.appendChild(typeMeta);
+  }
+  typeMeta.textContent = 'series';
+
+  if (seriesIndex) {
+    let posMeta = metasNow().find(m => m.getAttribute('refines') === '#' + collId && m.getAttribute('property') === 'group-position');
+    if (!posMeta) {
+      posMeta = opfDoc.createElementNS(NS.opf, 'meta');
+      posMeta.setAttribute('refines', '#' + collId);
+      posMeta.setAttribute('property', 'group-position');
+      metadata.appendChild(posMeta);
+    }
+    posMeta.textContent = seriesIndex;
+  }
 }
 
 /* -----------------------------------------------------------------------------
