@@ -339,12 +339,23 @@ async function loadEpub(file) {
 
     el.epubStatus.className = 'hint is-loaded';
     el.epubStatus.textContent = `Carregado: ${file.name} (${parsed.isEpub3 ? 'EPUB 3' : 'EPUB 2'})`;
+  } catch (err) {
+    // Aqui o problema é mesmo com o arquivo: leitura do zip, container ou .opf.
+    console.error(err);
+    el.epubStatus.className = 'hint is-error';
+    el.epubStatus.textContent = 'Não deu para abrir este EPUB: ' + err.message;
+    return;
+  }
 
+  // A montagem da interface é uma etapa à parte: se algo falhar aqui, o EPUB
+  // foi lido com sucesso e a mensagem não deve culpar o arquivo.
+  try {
     showLoadedUI();
   } catch (err) {
     console.error(err);
     el.epubStatus.className = 'hint is-error';
-    el.epubStatus.textContent = 'Não deu para abrir este EPUB: ' + err.message;
+    el.epubStatus.textContent = 'O EPUB foi lido, mas houve um erro ao montar a tela: '
+      + err.message + '. Se você atualizou os arquivos do site há pouco, confira se o index.html também foi atualizado.';
   }
 }
 
@@ -383,15 +394,47 @@ function showLoadedUI() {
   updateSaveHint();
 }
 
+// Os campos de metadados num só lugar: usado para preencher, habilitar/
+// desabilitar e ler na hora de salvar. Campos ausentes do HTML são ignorados
+// em vez de derrubar o carregamento inteiro — assim uma versão desatualizada
+// de um arquivo não quebra a ferramenta toda, só deixa de oferecer o campo.
+const META_FIELDS = [
+  { key: 'isbn',        ref: 'metaIsbn' },
+  { key: 'creator',     ref: 'metaCreator' },
+  { key: 'publisher',   ref: 'metaPublisher' },
+  { key: 'date',        ref: 'metaDate' },
+  { key: 'language',    ref: 'metaLanguage', transform: v => matchLanguage(v) },
+  { key: 'series',      ref: 'metaSeries' },
+  { key: 'seriesIndex', ref: 'metaSeriesIndex' },
+];
+
+function metaInputs() {
+  return META_FIELDS.map(f => el[f.ref]).filter(Boolean);
+}
+
 function fillMetadataFields() {
   const p = state.parsed;
-  el.metaIsbn.value = p.isbn || '';
-  el.metaCreator.value = p.creator || '';
-  el.metaPublisher.value = p.publisher || '';
-  el.metaDate.value = p.date || '';
-  el.metaLanguage.value = matchLanguage(p.language);
-  el.metaSeries.value = p.series || '';
-  el.metaSeriesIndex.value = p.seriesIndex || '';
+  const faltando = [];
+  for (const f of META_FIELDS) {
+    const input = el[f.ref];
+    if (!input) { faltando.push(f.key); continue; }
+    const raw = p[f.key] || '';
+    input.value = f.transform ? f.transform(raw) : raw;
+  }
+  if (faltando.length) {
+    console.warn('Campos ausentes no HTML (index.html desatualizado?):', faltando.join(', '));
+  }
+}
+
+// Lê os campos de volta, pulando os que não existem no HTML.
+function readMetadataFields() {
+  const changes = {};
+  for (const f of META_FIELDS) {
+    const input = el[f.ref];
+    if (!input) continue;
+    changes[f.key] = (input.value || '').trim();
+  }
+  return changes;
 }
 
 /* -- Eventos de upload do EPUB ------------------------------------------------ */
@@ -537,11 +580,10 @@ function updateFormatUI() {
 
 /* -- Metadados: checkbox mestre habilita/desabilita os campos ----------------- */
 function setMetaEnabled(on) {
-  [el.metaIsbn, el.metaCreator, el.metaPublisher, el.metaDate, el.metaLanguage, el.metaSeries, el.metaSeriesIndex]
-    .forEach(f => f.disabled = !on);
-  el.metaFields.classList.toggle('is-disabled', !on);
+  metaInputs().forEach(f => f.disabled = !on);
+  if (el.metaFields) el.metaFields.classList.toggle('is-disabled', !on);
 }
-el.metaEdit.addEventListener('change', e => setMetaEnabled(e.target.checked));
+if (el.metaEdit) el.metaEdit.addEventListener('change', e => setMetaEnabled(e.target.checked));
 setMetaEnabled(false);
 
 /* -----------------------------------------------------------------------------
@@ -566,15 +608,7 @@ el.saveEpub.addEventListener('click', async () => {
 
     // -- metadados --
     if (el.metaEdit.checked) {
-      writeMetadata(opfDoc, parsed, {
-        isbn: el.metaIsbn.value.trim(),
-        creator: el.metaCreator.value.trim(),
-        publisher: el.metaPublisher.value.trim(),
-        date: el.metaDate.value.trim(),
-        language: el.metaLanguage.value,
-        series: el.metaSeries.value.trim(),
-        seriesIndex: el.metaSeriesIndex.value.trim(),
-      });
+      writeMetadata(opfDoc, parsed, readMetadataFields());
     }
     el.epubFill.style.width = '40%';
     await new Promise(r => setTimeout(r, 0));
