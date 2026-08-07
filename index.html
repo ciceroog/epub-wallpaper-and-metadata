@@ -15,7 +15,7 @@
     </div>
     <p class="privacy" title="Todo o processamento acontece no seu navegador.">
       <span class="dot"></span> nada sai do seu navegador
-      <a class="tool-switch" href="https://ciceroog.github.io/">← Criador de capas para e-readers</a>
+      <a class="tool-switch" href="index.html">← Criador de capas para e-readers</a>
     </p>
   </header>
 
@@ -127,6 +127,23 @@
           <div class="slider-top"><label for="quality">Qualidade</label><output id="quality-out">90</output></div>
           <input id="quality" type="range" min="1" max="100" value="90">
         </div>
+      </section>
+
+      <section class="card" id="color-card" hidden>
+        <h2>Cor</h2>
+        <label class="radio-line">
+          <input type="radio" name="color" value="pb">
+          <span>Preto e branco <em>(paleta do aparelho)</em></span>
+        </label>
+        <label class="radio-line">
+          <input type="radio" name="color" value="cor" checked>
+          <span>Colorido</span>
+        </label>
+        <label class="check" id="dither-row">
+          <input type="checkbox" id="dither" checked>
+          <span>Dithering Floyd–Steinberg</span>
+        </label>
+        <p class="hint">Vale só pra capa nova, se você substituir. A capa original mantida não passa por essa conversão.</p>
       </section>
 
       <section class="card" id="meta-card" hidden>

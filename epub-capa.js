@@ -10,50 +10,50 @@
    (não redimensiona, só aplica os ajustes de enquadramento se for o caso).
    --------------------------------------------------------------------------- */
 const PROFILES = [
-  { id:'ORIGINAL', name:'Tamanho original da imagem', w:0, h:0, group:'Recomendado' },
+  { id:'ORIGINAL', name:'Tamanho original da imagem', w:0, h:0, levels:16, color:true, group:'Recomendado' },
 
-  { id:'XTEX34', name:'XTEINK X3/X4', w:480, h:800, group:'XTEINK' },
+  { id:'XTEX34', name:'XTEINK X3/X4', w:480, h:800, levels:16, color:false, group:'XTEINK' },
 
-  { id:'K1',    name:'Kindle 1',                   w:600,  h:670,  group:'Kindle' },
-  { id:'K2',    name:'Kindle 2',                   w:600,  h:670,  group:'Kindle' },
-  { id:'K34',   name:'Kindle Keyboard/Touch',      w:600,  h:800,  group:'Kindle' },
-  { id:'K57',   name:'Kindle 5/7',                 w:600,  h:800,  group:'Kindle' },
-  { id:'K810',  name:'Kindle 8/10',                w:600,  h:800,  group:'Kindle' },
-  { id:'K11',   name:'Kindle 11',                  w:1072, h:1448, group:'Kindle' },
-  { id:'KV',    name:'Kindle Voyage',              w:1072, h:1448, group:'Kindle' },
-  { id:'KDX',   name:'Kindle DX/DXG',              w:824,  h:1000, group:'Kindle' },
-  { id:'KPW',   name:'Kindle Paperwhite 1/2',      w:758,  h:1024, group:'Kindle' },
-  { id:'KPW34', name:'Kindle Paperwhite 3/4',      w:1072, h:1448, group:'Kindle' },
-  { id:'KPW5',  name:'Kindle Paperwhite 5/Sig.',   w:1236, h:1648, group:'Kindle' },
-  { id:'KPW6',  name:'Kindle Paperwhite 6',        w:1272, h:1696, group:'Kindle' },
-  { id:'KO',    name:'Kindle Oasis 2/3',           w:1264, h:1680, group:'Kindle' },
-  { id:'KCS',   name:'Kindle Colorsoft',           w:1272, h:1696, group:'Kindle' },
-  { id:'KS',    name:'Kindle Scribe 1/2',          w:1860, h:2480, group:'Kindle' },
-  { id:'KS3',   name:'Kindle Scribe 3',            w:1986, h:2648, group:'Kindle' },
-  { id:'KSCS',  name:'Kindle Scribe Colorsoft',    w:1986, h:2648, group:'Kindle' },
+  { id:'K1',    name:'Kindle 1',                   w:600,  h:670,  levels:4,  color:false, group:'Kindle' },
+  { id:'K2',    name:'Kindle 2',                   w:600,  h:670,  levels:15, color:false, group:'Kindle' },
+  { id:'K34',   name:'Kindle Keyboard/Touch',      w:600,  h:800,  levels:16, color:false, group:'Kindle' },
+  { id:'K57',   name:'Kindle 5/7',                 w:600,  h:800,  levels:16, color:false, group:'Kindle' },
+  { id:'K810',  name:'Kindle 8/10',                w:600,  h:800,  levels:16, color:false, group:'Kindle' },
+  { id:'K11',   name:'Kindle 11',                  w:1072, h:1448, levels:16, color:false, group:'Kindle' },
+  { id:'KV',    name:'Kindle Voyage',              w:1072, h:1448, levels:16, color:false, group:'Kindle' },
+  { id:'KDX',   name:'Kindle DX/DXG',              w:824,  h:1000, levels:16, color:false, group:'Kindle' },
+  { id:'KPW',   name:'Kindle Paperwhite 1/2',      w:758,  h:1024, levels:16, color:false, group:'Kindle' },
+  { id:'KPW34', name:'Kindle Paperwhite 3/4',      w:1072, h:1448, levels:16, color:false, group:'Kindle' },
+  { id:'KPW5',  name:'Kindle Paperwhite 5/Sig.',   w:1236, h:1648, levels:16, color:false, group:'Kindle' },
+  { id:'KPW6',  name:'Kindle Paperwhite 6',        w:1272, h:1696, levels:16, color:false, group:'Kindle' },
+  { id:'KO',    name:'Kindle Oasis 2/3',           w:1264, h:1680, levels:16, color:false, group:'Kindle' },
+  { id:'KCS',   name:'Kindle Colorsoft',           w:1272, h:1696, levels:16, color:true,  group:'Kindle' },
+  { id:'KS',    name:'Kindle Scribe 1/2',          w:1860, h:2480, levels:16, color:false, group:'Kindle' },
+  { id:'KS3',   name:'Kindle Scribe 3',            w:1986, h:2648, levels:16, color:false, group:'Kindle' },
+  { id:'KSCS',  name:'Kindle Scribe Colorsoft',    w:1986, h:2648, levels:16, color:true,  group:'Kindle' },
 
-  { id:'KoMT',  name:'Kobo Mini/Touch',            w:600,  h:800,  group:'Kobo' },
-  { id:'KoG',   name:'Kobo Glo',                   w:768,  h:1024, group:'Kobo' },
-  { id:'KoGHD', name:'Kobo Glo HD',                w:1072, h:1448, group:'Kobo' },
-  { id:'KoA',   name:'Kobo Aura',                  w:758,  h:1024, group:'Kobo' },
-  { id:'KoAHD', name:'Kobo Aura HD',               w:1080, h:1440, group:'Kobo' },
-  { id:'KoAH2O',name:'Kobo Aura H2O',              w:1080, h:1430, group:'Kobo' },
-  { id:'KoAO',  name:'Kobo Aura ONE',              w:1404, h:1872, group:'Kobo' },
-  { id:'KoN',   name:'Kobo Nia',                   w:758,  h:1024, group:'Kobo' },
-  { id:'KoC',   name:'Kobo Clara HD/Clara 2E',     w:1072, h:1448, group:'Kobo' },
-  { id:'KoCC',  name:'Kobo Clara Colour',          w:1072, h:1448, group:'Kobo' },
-  { id:'KoL',   name:'Kobo Libra H2O/Libra 2',     w:1264, h:1680, group:'Kobo' },
-  { id:'KoLC',  name:'Kobo Libra Colour',          w:1264, h:1680, group:'Kobo' },
-  { id:'KoF',   name:'Kobo Forma',                 w:1440, h:1920, group:'Kobo' },
-  { id:'KoS',   name:'Kobo Sage',                  w:1440, h:1920, group:'Kobo' },
-  { id:'KoE',   name:'Kobo Elipsa',                w:1404, h:1872, group:'Kobo' },
+  { id:'KoMT',  name:'Kobo Mini/Touch',            w:600,  h:800,  levels:16, color:false, group:'Kobo' },
+  { id:'KoG',   name:'Kobo Glo',                   w:768,  h:1024, levels:16, color:false, group:'Kobo' },
+  { id:'KoGHD', name:'Kobo Glo HD',                w:1072, h:1448, levels:16, color:false, group:'Kobo' },
+  { id:'KoA',   name:'Kobo Aura',                  w:758,  h:1024, levels:16, color:false, group:'Kobo' },
+  { id:'KoAHD', name:'Kobo Aura HD',               w:1080, h:1440, levels:16, color:false, group:'Kobo' },
+  { id:'KoAH2O',name:'Kobo Aura H2O',              w:1080, h:1430, levels:16, color:false, group:'Kobo' },
+  { id:'KoAO',  name:'Kobo Aura ONE',              w:1404, h:1872, levels:16, color:false, group:'Kobo' },
+  { id:'KoN',   name:'Kobo Nia',                   w:758,  h:1024, levels:16, color:false, group:'Kobo' },
+  { id:'KoC',   name:'Kobo Clara HD/Clara 2E',     w:1072, h:1448, levels:16, color:false, group:'Kobo' },
+  { id:'KoCC',  name:'Kobo Clara Colour',          w:1072, h:1448, levels:16, color:true,  group:'Kobo' },
+  { id:'KoL',   name:'Kobo Libra H2O/Libra 2',     w:1264, h:1680, levels:16, color:false, group:'Kobo' },
+  { id:'KoLC',  name:'Kobo Libra Colour',          w:1264, h:1680, levels:16, color:true,  group:'Kobo' },
+  { id:'KoF',   name:'Kobo Forma',                 w:1440, h:1920, levels:16, color:false, group:'Kobo' },
+  { id:'KoS',   name:'Kobo Sage',                  w:1440, h:1920, levels:16, color:false, group:'Kobo' },
+  { id:'KoE',   name:'Kobo Elipsa',                w:1404, h:1872, levels:16, color:false, group:'Kobo' },
 
-  { id:'Rmk1',      name:'reMarkable 1',           w:1404, h:1872, group:'reMarkable' },
-  { id:'Rmk2',      name:'reMarkable 2',           w:1404, h:1872, group:'reMarkable' },
-  { id:'RmkPP',     name:'reMarkable Paper Pro',   w:1620, h:2160, group:'reMarkable' },
-  { id:'RmkPPMove', name:'reMarkable Paper Pro Move', w:954, h:1696, group:'reMarkable' },
+  { id:'Rmk1',      name:'reMarkable 1',           w:1404, h:1872, levels:16, color:false, group:'reMarkable' },
+  { id:'Rmk2',      name:'reMarkable 2',           w:1404, h:1872, levels:16, color:false, group:'reMarkable' },
+  { id:'RmkPP',     name:'reMarkable Paper Pro',   w:1620, h:2160, levels:16, color:false, group:'reMarkable' },
+  { id:'RmkPPMove', name:'reMarkable Paper Pro Move', w:954, h:1696, levels:16, color:false, group:'reMarkable' },
 
-  { id:'OTHER', name:'Tamanho personalizado', w:0, h:0, group:'Outro' },
+  { id:'OTHER', name:'Tamanho personalizado', w:0, h:0, levels:16, color:true, group:'Outro' },
 ];
 const byId = id => PROFILES.find(p => p.id === id);
 
@@ -104,6 +104,58 @@ function drawComposition(ctx, img, cw, ch, fit, scale, panX, panY, bg) {
   ctx.drawImage(img, offX, offY, dw, dh);
 }
 
+// Luminância perceptual.
+function luma(r, g, b) { return 0.299 * r + 0.587 * g + 0.114 * b; }
+
+// Quantização simples para N tons de cinza (sem dithering).
+function quantizeGray(imageData, levels) {
+  const d = imageData.data;
+  const step = 255 / (levels - 1);
+  for (let i = 0; i < d.length; i += 4) {
+    const v = Math.round(Math.round(luma(d[i], d[i+1], d[i+2]) / step) * step);
+    d[i] = d[i+1] = d[i+2] = v; d[i+3] = 255;
+  }
+}
+
+// Dithering Floyd–Steinberg para N tons de cinza.
+function ditherGray(imageData, levels) {
+  const { width: w, height: h, data: d } = imageData;
+  const gray = new Float32Array(w * h);
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) gray[p] = luma(d[i], d[i+1], d[i+2]);
+
+  const step = 255 / (levels - 1);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = y * w + x;
+      const old = gray[idx];
+      const q = Math.round(old / step) * step;
+      const err = old - q;
+      gray[idx] = q;
+      if (x + 1 < w)              gray[idx + 1]     += err * 7 / 16;
+      if (y + 1 < h) {
+        if (x > 0)               gray[idx + w - 1] += err * 3 / 16;
+                                 gray[idx + w]     += err * 5 / 16;
+        if (x + 1 < w)           gray[idx + w + 1] += err * 1 / 16;
+      }
+    }
+  }
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    const v = Math.max(0, Math.min(255, Math.round(gray[p])));
+    d[i] = d[i+1] = d[i+2] = v; d[i+3] = 255;
+  }
+}
+
+// Aplica a composição e, se for o caso, a conversão pra tons de cinza — a
+// mesma lógica usada nos dois lugares: pré-visualização e exportação final.
+function paint(targetCtx, img, cw, ch, adj, bg, colorMode, dither, levels) {
+  drawComposition(targetCtx, img, cw, ch, adj.fit, adj.scale / 100, adj.panX / 100, adj.panY / 100, bg);
+  if (colorMode === 'pb') {
+    const data = targetCtx.getImageData(0, 0, cw, ch);
+    dither ? ditherGray(data, levels) : quantizeGray(data, levels);
+    targetCtx.putImageData(data, 0, 0);
+  }
+}
+
 /* -----------------------------------------------------------------------------
    Interface
    --------------------------------------------------------------------------- */
@@ -116,6 +168,7 @@ const state = {
   newCoverImg: null,       // Image() da capa nova, se o usuário substituiu
   adj: { fit: 'cover', scale: 100, panX: 0, panY: 0 },
   profileId: 'ORIGINAL', customW: 1600, customH: 2400, bgLight: true,
+  colorMode: 'cor', dither: true,
   format: 'jpeg', quality: 90,
 };
 
@@ -135,6 +188,8 @@ const el = {
   bg: $('#bg'), scale: $('#scale'), panX: $('#panx'), panY: $('#pany'),
   scaleNum: $('#scale-num'), panXNum: $('#panx-num'), panYNum: $('#pany-num'), reset: $('#reset'),
   qualityRow: $('#quality-row'), quality: $('#quality'), qualityOut: $('#quality-out'),
+
+  colorCard: $('#color-card'), ditherRow: $('#dither-row'), dither: $('#dither'),
 
   metaCard: $('#meta-card'), metaEdit: $('#meta-edit'), metaFields: $('#meta-fields'),
   metaIsbn: $('#meta-isbn'), metaCreator: $('#meta-creator'), metaPublisher: $('#meta-publisher'),
@@ -208,8 +263,7 @@ function render() {
 
   el.canvas.width = cw; el.canvas.height = ch;
   const bg = state.bgLight ? '#ffffff' : '#000000';
-  drawComposition(ctx, img, cw, ch, state.adj.fit, state.adj.scale / 100,
-                  state.adj.panX / 100, state.adj.panY / 100, bg);
+  paint(ctx, img, cw, ch, state.adj, bg, state.colorMode, state.dither, prof.levels || 16);
 
   fitCanvasToStage(full.w, full.h);
   el.dims.textContent = `${full.w} × ${full.h} px`;
@@ -309,6 +363,7 @@ function showLoadedUI() {
 
   el.coverCard.hidden = false;
   el.adjustCard.hidden = false;
+  el.colorCard.hidden = false;
   el.metaCard.hidden = false;
   el.exportCard.hidden = false;
 
@@ -321,6 +376,7 @@ function showLoadedUI() {
   fillMetadataFields();
   updateFormatUI();
   syncAdjustControls();
+  updateColorUI();
   scheduleRender();
   updateSaveHint();
 }
@@ -401,11 +457,17 @@ function onProfileChange() {
   state.profileId = el.profile.value;
   const p = byId(state.profileId);
   el.custom.style.display = (p.id === 'OTHER') ? 'flex' : 'none';
+
+  state.colorMode = p.color ? 'cor' : 'pb';
+  const colorRadio = document.querySelector(`input[name=color][value=${state.colorMode}]`);
+  if (colorRadio) colorRadio.checked = true;
+  updateColorUI();
+
   el.profileInfo.textContent = p.id === 'ORIGINAL'
     ? 'Mantém a resolução da imagem enviada, sem redimensionar.'
     : p.id === 'OTHER'
       ? 'Defina a largura e a altura em pixels.'
-      : `Redimensiona a capa para ${p.w}×${p.h}px.`;
+      : `Redimensiona a capa para ${p.w}×${p.h}px${p.color ? ' · painel colorido' : ` · ${p.levels} tons de cinza`}.`;
   scheduleRender();
 }
 el.profile.addEventListener('change', onProfileChange);
@@ -415,6 +477,15 @@ el.customH.addEventListener('input', () => { state.customH = +el.customH.value; 
 document.querySelectorAll('input[name=fit]').forEach(r =>
   r.addEventListener('change', e => { state.adj.fit = e.target.value; scheduleRender(); }));
 el.bg.addEventListener('change', e => { state.bgLight = e.target.checked; scheduleRender(); });
+
+document.querySelectorAll('input[name=color]').forEach(r =>
+  r.addEventListener('change', e => { state.colorMode = e.target.value; updateColorUI(); scheduleRender(); }));
+el.dither.addEventListener('change', e => { state.dither = e.target.checked; scheduleRender(); });
+
+function updateColorUI() {
+  el.ditherRow.style.opacity = state.colorMode === 'pb' ? '1' : '.45';
+  el.dither.disabled = state.colorMode !== 'pb';
+}
 
 function bindSliderNumber(slider, number, min, max, key) {
   const apply = v => {
@@ -511,8 +582,7 @@ el.saveEpub.addEventListener('click', async () => {
       oc.width = full.w; oc.height = full.h;
       const octx = oc.getContext('2d');
       const bg = state.bgLight ? '#ffffff' : '#000000';
-      drawComposition(octx, state.newCoverImg, full.w, full.h, state.adj.fit,
-                      state.adj.scale / 100, state.adj.panX / 100, state.adj.panY / 100, bg);
+      paint(octx, state.newCoverImg, full.w, full.h, state.adj, bg, state.colorMode, state.dither, prof.levels || 16);
 
       const mime = state.format === 'png' ? 'image/png' : 'image/jpeg';
       const ext = state.format === 'png' ? 'png' : 'jpg';
