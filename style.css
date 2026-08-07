@@ -157,7 +157,19 @@ body {
   max-width: 100%;
   min-height: 0;
   display: flex;
-  overflow: hidden;   /* nunca deixa a capa furar por cima dos cantos da moldura */
+  overflow: hidden;   /* 1ª camada: recorta o que passar da área da moldura */
+}
+/* 2ª camada: uma borda "vazada" pintada por cima da capa, cobrindo qualquer
+   canto que ainda apareça por cima do recorte da camada 1 — não depende de
+   overflow nem de como o navegador calcula o tamanho do canvas por dentro. */
+.frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  border: 10px solid #34373e;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+  pointer-events: none;
 }
 #preview {
   display: none;

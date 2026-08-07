@@ -283,8 +283,9 @@ function updateEmptyCoverUI() {
 }
 
 function fitCanvasToStage(fullW, fullH) {
-  const maxW = el.stage.clientWidth - 48;
-  const maxH = el.stage.clientHeight - 130;
+  const FRAME_PADDING = 20; // 10px de cada lado, os mesmos do .frame no CSS
+  const maxW = el.stage.clientWidth - 48 - FRAME_PADDING;
+  const maxH = el.stage.clientHeight - 130 - FRAME_PADDING;
   const scale = Math.min(maxW / fullW, maxH / fullH, 1.2);
   el.canvas.style.width = Math.round(fullW * scale) + 'px';
   el.canvas.style.height = Math.round(fullH * scale) + 'px';
